@@ -1,0 +1,428 @@
+<?xml version="1.0" encoding="utf-8"?>
+<config>
+    <tabs>
+        <shipfunk translate="label" module="shipfunk">
+            <label>Shipfunk</label>
+            <sort_order>220</sort_order>
+        </shipfunk>
+    </tabs>
+    <sections>
+    	<carriers translate="label" module="shipping">
+            <label>Shipping Methods</label>
+            <tab>sales</tab>
+            <frontend_type>text</frontend_type>
+            <sort_order>320</sort_order>
+            <show_in_default>1</show_in_default>
+            <show_in_website>1</show_in_website>
+            <show_in_store>1</show_in_store>
+            <groups>
+            	<shipfunk translate="label">
+                    <label>Shipfunk</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>2</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <fields>
+                        <active translate="label">
+                            <label>Enabled</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>1</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </active>
+                        <name translate="label">
+                            <label>Method Name</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>3</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </name>
+                        <price translate="label">
+                            <label>Price</label>
+                            <frontend_type>text</frontend_type>
+                            <validate>validate-number validate-zero-or-greater</validate>
+                            <sort_order>5</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </price>
+                        <handling_type translate="label">
+                            <label>Calculate Handling Fee</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>shipping/source_handlingType</source_model>
+                            <sort_order>7</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </handling_type>
+                        <handling_fee translate="label">
+                            <label>Handling Fee</label>
+                            <frontend_type>text</frontend_type>
+                            <validate>validate-number validate-zero-or-greater</validate>
+                            <sort_order>8</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </handling_fee>
+                        <sort_order translate="label">
+                            <label>Sort Order</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>100</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </sort_order>
+                        <title translate="label">
+                            <label>Title</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>2</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </title>
+                        <type translate="label">
+                            <label>Type</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_shipping_flatrate</source_model>
+                            <sort_order>4</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </type>
+                        <sallowspecific translate="label">
+                            <label>Ship to Applicable Countries</label>
+                            <frontend_type>select</frontend_type>
+                            <sort_order>90</sort_order>
+                            <frontend_class>shipping-applicable-country</frontend_class>
+                            <source_model>adminhtml/system_config_source_shipping_allspecificcountries</source_model>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </sallowspecific>
+                        <specificcountry translate="label">
+                            <label>Ship to Specific Countries</label>
+                            <frontend_type>multiselect</frontend_type>
+                            <sort_order>91</sort_order>
+                            <source_model>adminhtml/system_config_source_country</source_model>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                            <can_be_empty>1</can_be_empty>
+                        </specificcountry>
+                        <showmethod translate="label">
+                            <label>Show Method if Not Applicable</label>
+                            <frontend_type>select</frontend_type>
+                            <sort_order>92</sort_order>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </showmethod>
+                        <specificerrmsg translate="label">
+                            <label>Displayed Error Message</label>
+                            <frontend_type>textarea</frontend_type>
+                            <sort_order>80</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </specificerrmsg>
+                    </fields>
+                </shipfunk>
+              </groups>
+        </carriers>
+        <shipfunk translate="label" module="shipfunk">
+            <label>Shipfunk</label>
+            <tab>shipfunk</tab>
+            <frontend_type>text</frontend_type>
+            <sort_order>300</sort_order>
+            <show_in_default>1</show_in_default>
+            <show_in_website>1</show_in_website>
+            <show_in_store>1</show_in_store>
+            <groups>
+                <base translate="label">
+                    <label>Basic</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>1</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <fields>
+                        <enabled translate="label comment">
+                            <label>Enable </label>
+                            <sort_order>10</sort_order>
+                            <comment>Enable or disable the Shipfunk delivery service</comment>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </enabled>
+	                    <api_production translate="label comment">
+	                            <label>API Key(Production)</label>
+	                            <sort_order>20</sort_order>
+	                            <show_in_default>1</show_in_default>
+	                            <show_in_website>1</show_in_website>
+	                            <show_in_store>0</show_in_store>
+	                     </api_production>
+	                     <api_development translate="label comment">
+	                            <label>API Key(Development)</label>
+	                            <sort_order>30</sort_order>
+	                            <show_in_default>1</show_in_default>
+	                            <show_in_website>1</show_in_website>
+	                            <show_in_store>0</show_in_store>
+	                     </api_development>
+	                     <environment translate="label">
+	                            <label>Environment</label>
+	                            <frontend_type>select</frontend_type>
+	                            <source_model>shipfunk/product_attribute_source_environment</source_model>
+	                            <sort_order>40</sort_order>
+	                            <show_in_default>1</show_in_default>
+	                            <show_in_website>1</show_in_website>
+	                            <show_in_store>0</show_in_store>
+                        </environment>
+                         <language translate="label">
+	                            <label>Language</label>
+	                            <frontend_type>select</frontend_type>
+	                            <source_model>shipfunk/product_attribute_source_language</source_model>
+	                            <sort_order>50</sort_order>
+	                            <show_in_default>1</show_in_default>
+	                            <show_in_website>1</show_in_website>
+	                            <show_in_store>0</show_in_store>
+                        </language>
+                        <error_report_receivers translate="label">
+                            <label>Error Report Receivers</label>
+                            <comment>
+								<![CDATA[
+								Use comma as separator when there're more than 1 receiver.
+								]]>
+							</comment>
+                            <frontend_type>textarea</frontend_type>
+                            <sort_order>60</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <validate>required-entry</validate>
+                            <show_in_store>1</show_in_store>
+                        </error_report_receivers>
+                     </fields>
+                </base>
+                <warehouse translate="label">
+                    <label>Warehouse</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>2</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <fields>
+                    <warehouse_name translate="label comment">
+                            <label>Default Warehouse Name</label>
+                            <comment>If a product posts to Shipfunk without a warehouse, this one will be used.</comment>
+                            <sort_order>10</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                     </warehouse_name>
+                     <!--<warehouse_attribute translate="label">
+                            <label>Warehouse Attribute</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>shipfunk/product_attribute_source_attribute</source_model>
+                            <sort_order>10</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                     </warehouse_attribute>-->
+                     </fields>
+                </warehouse>
+                <weight translate="label">
+                    <label>Weight</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>3</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <fields>
+                    <weight_unit translate="label comment">
+                            <label>Default Weight Unit</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>shipfunk/product_attribute_source_weight_unit</source_model>
+                            <sort_order>10</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                     </weight_unit>
+                     <!--<weight_unit_attribute translate="label">
+                            <label>Weight Unit Attribute</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>shipfunk/product_attribute_source_attribute</source_model>
+                            <sort_order>10</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                     </weight_unit_attribute>-->
+                     <default_weight translate="label comment">
+                            <label>Default Weight</label>
+                            <comment>If a product posts to Shipfunk without a weight, this one will be used.</comment>
+                            <sort_order>30</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                     </default_weight>
+                     </fields>
+                </weight>
+                <dimensions translate="label">
+                    <label>Dimensions</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>4</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <fields>
+                    <!--<dimension_unit_attribute translate="label">
+                            <label>Dimension Unit Attribute</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>shipfunk/product_attribute_source_attribute</source_model>
+                            <sort_order>10</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                     </dimension_unit_attribute>-->
+                    <dimension_unit translate="label comment">
+                            <label>Default Dimension Unit</label>
+                            <frontend_type>select</frontend_type>
+                             <source_model>shipfunk/product_attribute_source_dimension_unit</source_model>
+                            <sort_order>10</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                     </dimension_unit>
+                     <!--<width_attribute translate="label">
+                            <label>Width Attribute</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>shipfunk/product_attribute_source_attribute</source_model>
+                            <sort_order>10</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                     </width_attribute>-->
+                     <default_width translate="label comment">
+                            <label>Default Width</label>
+                            <comment>If a product posts to Shipfunk without a width, this one will be used.</comment>
+                            <default>2</default>
+                            <sort_order>40</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                     </default_width>
+                     <!--<depth_attribute translate="label">
+                            <label>Depth Attribute</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>shipfunk/product_attribute_source_attribute</source_model>
+                            <sort_order>10</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                     </depth_attribute>-->
+                     <default_depth translate="label comment">
+                            <label>Default Depth</label>
+                            <comment>If a product posts to Shipfunk without a depth, this one will be used.</comment>
+                            <default>2</default>
+                            <sort_order>60</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                     </default_depth>
+                     <!--<height_attribute translate="label">
+                            <label>Height Attribute</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>shipfunk/product_attribute_source_attribute</source_model>
+                            <sort_order>10</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                     </height_attribute>-->
+                     <default_height translate="label comment">
+                            <label>Default Height</label>
+                            <comment>If a product posts to Shipfunk without a height, this one will be used.</comment>
+                            <default>2</default>
+                            <sort_order>80</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                     </default_height>
+                     </fields>
+                </dimensions>
+                <categories translate="label">
+                    <label>Categories</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>5</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <fields>
+                    <order_delivery_options_by_the_categories translate="label comment">
+                            <label>Order delivery options by the categories</label>
+                            <frontend_type>select</frontend_type>
+                            <!-- <source_model>shipfunk/product_attribute_source_environment</source_model> -->
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>10</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                     </order_delivery_options_by_the_categories>
+                     </fields>
+                </categories>
+                <!-- <boxPacker translate="label">
+                    <label>BoxPacker</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>5</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <fields>
+                    <enable_boxPacker translate="label comment">
+                            <label>Enable BoxPacker</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>shipfunk/product_attribute_source_environment</source_model>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>10</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                     </enable_boxPacker>
+                     </fields>
+                </boxPacker> -->
+                <package_card translate="label">
+                    <label>Package Card</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>6</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <fields>
+                    <package_card_types translate="label comment">
+                            <label>Package card types</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>shipfunk/product_attribute_source_environment_types</source_model>
+                            <sort_order>10</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                     </package_card_types>
+                     <package_card_sizes translate="label comment">
+                            <label>Package card sizes</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>shipfunk/product_attribute_source_environment_sizes</source_model>
+                            <sort_order>20</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                     </package_card_sizes>
+                     </fields>
+                </package_card>
+            </groups>
+         </shipfunk>
+    </sections>
+</config>

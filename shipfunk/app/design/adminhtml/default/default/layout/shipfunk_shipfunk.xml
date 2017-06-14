@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+    <adminhtml_sales_order_view>
+        <reference name="head">
+            <action method="addJs"><script>shipfunk/jquery-2.1.4.min.js</script></action>
+            <action method="addJs"><script>shipfunk/jquery-noconflict.js</script></action>
+            <action method="addJs"><script>shipfunk/dialog-plus.js</script></action>
+	      </reference>
+    </adminhtml_sales_order_view>
+    <adminhtml_sales_order_view>
+    	<reference name="content">
+            <block type="shipfunk/adminhtml_sales_order_view" name="shipfunk_sales_order_parcels" template="shipfunk/sales_order_view.phtml" after='-'/>
+        </reference>
+    </adminhtml_sales_order_view>
+    <shipfunk_adminhtml_parcel_editparcel>
+        <block type="shipfunk/adminhtml_sales_order_view" name="shipfunk_sales_order_parcels" template="shipfunk/sales_order_view.phtml"></block>
+    </shipfunk_adminhtml_parcel_editparcel>
+
+    <shipfunk_adminhtml_parcel_editparcel>
+        <block type="shipfunk/adminhtml_sales_order_view" name="shipfunk_sales_order_parcels" template="shipfunk/sales_order_view.phtml"></block>
+    </shipfunk_adminhtml_parcel_editparcel>
+    <shipfunk_adminhtml_parcel_addparcel>
+        <block type="shipfunk/adminhtml_sales_order_view" name="shipfunk_sales_order_parcels" template="shipfunk/sales_order_view.phtml"></block>
+    </shipfunk_adminhtml_parcel_addparcel>
+    <shipfunk_adminhtml_parcel_removeparcel>
+        <block type="shipfunk/adminhtml_sales_order_view" name="shipfunk_sales_order_parcels" template="shipfunk/sales_order_view.phtml"></block>
+    </shipfunk_adminhtml_parcel_removeparcel>
+</layout>

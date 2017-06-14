@@ -1,0 +1,322 @@
+<?php 
+$shipfunkApi = Mage::helper('shipfunk')->getShipfunkApiInfo();
+$apiUrlDev = $shipfunkApi['url'];
+
+//Settings from configuration page
+$apiKeyDev = $shipfunkApi['key'];
+
+//temporary order ID, use 100000000 + quote_id, e.g.: quote_id = 12, then it's 100000012
+$orderTempId = $this->helper('shipfunk')->getTmpOrderId();
+$address = Mage::getSingleton('checkout/session')->getQuote()->getShippingAddress();
+$selectShippingMethod = $address->getShippingMethod();
+$shipfunkpickups = Mage::getSingleton('core/session')->getData('shipfunkpickups');
+$shipfunkpickups = json_decode($shipfunkpickups,true);
+?>
+<script type="text/javascript">
+(function(){
+	var loadingMaskHtml = '<div id="loading-mask" style="display:none">\
+	    <p class="loader" id="loading_mask_loader"><img src="<?php echo $this->getSkinUrl('shipfunk/images/ajax-loader-tr.gif')?>" alt="Loading..."><br>Please wait...</p>\
+	    </div>';
+	if(jQuery('#loading-mask').length == 0){
+		jQuery('body').after(loadingMaskHtml);
+	}
+	jQuery(document).off('click',"input[name='shipping_method']");
+	jQuery(document).off('click',"input[name='shipping_method_pickup']");
+	jQuery(document).off('click',"#search-submit");
+	jQuery(document).off('click',"#reset-submit");
+    var shipfunkPickupLib = {
+    	shipfunkpickups : <?php echo $shipfunkpickups?json_encode($shipfunkpickups):'{}';?>,
+    	pickDialog : {},
+    	selectShippingMethod:'<?php echo $selectShippingMethod?>',
+    	selectPickup:'<?php echo $address->getData('pick_up')?>',
+    	selectPickupValue:'<?php echo $address->getData('pickup_code')?>',
+    	currentPostcode:'<?php echo $address->getPostcode()?>',
+    	pickupsHtml : '\
+    		<div class="pickups-dialog">\
+    			<div class="form-inline">\
+    	    		<div class="form-group">\
+    	            	<input type="text" class="form-control" id="search-pickups" placeholder="<?php echo Mage::helper('shipfunk')->__('Search for other pickup points by postcode.')?>">\
+    	          	</div>\
+    	          	<button id="search-submit" class="btn btn-default">Search</button>\
+    				<button id="reset-submit" postcode="<?php echo $address->getPostcode()?>" class="btn btn-default">Reset</button>\
+    	  		</div>\
+    			<ul class="list-group">\
+    				{html}\
+    			</ul>\
+    		</div>\
+    		',
+    	carriercode:'',
+    	pickupid:'',
+    	calculatedPrice:'',
+    	customerPrice:'',
+    	itemCarriercode:'',
+    	selectPickupId:'',
+    	loadingObj:'#loading-mask',
+    	showLoading:function(){
+			jQuery(this.loadingObj).show();
+        },
+        hideLoading:function(){
+        	jQuery(this.loadingObj).hide();
+        },
+    	selectedDelivery:function(){
+    		var that = this;
+    		that.showLoading();
+    		var sf_sendable_selected = {
+    	            "query": {
+    	                "webshop": {
+    	                    "api_key": "<?php echo $apiKeyDev; ?>"
+    	                },
+    	                "order": {
+    	                    "selected_option": {
+    	                        "carriercode": this.carriercode,
+    	                        "pickupid": this.pickupid,
+    	                        "calculated_price": this.calculatedPrice,
+    	                        "customer_price": this.customerPrice,
+    	                        "return_prices": "0"
+    	                    }
+    	                }
+    	            }
+    	        };
+    	        sf_sendable_selected = JSON.stringify(sf_sendable_selected);
+    	        jQuery.ajax({
+    	            type: "GET",
+    	            url: "<?php echo $apiUrlDev; ?>selected_delivery/true/json/json/<?php echo $orderTempId; ?>",
+    	            timeout: 5000, // 5 second timeout in millis!
+    	            data: {'sf_selected_delivery': sf_sendable_selected},
+    	            //jsonp : false,
+    	            //cache: 'true',
+    	            jsonpCallback: 'jsonCallback',
+    	            dataType: "jsonp",
+    	            success: function (data, textStatus, jqXHR) {
+    	                var selectDeliverySuccess = false;
+    	                if(data != "" && textStatus == "success"){
+    	                	data = jQuery.trim(data);
+    	                    var dataArr = JSON.parse(data);
+    	                    if(dataArr.response.Code){
+    	                        selectDeliverySuccess = true;
+    	                    }
+    	                }
+    	                if(!selectDeliverySuccess){
+    	                    //if selectDeliverySuccess == false, alert the customer
+    	                    //and remove the selected method to force selection again
+    	                    alert("Sorry, the request cannot be handled with unknown reason, please try again.");
+    	                    jQuery("input[name='shipping_method']:checked").prop('checked',false);
+    	                    jQuery("input[name='shipping_method_pickup']:checked").prop('checked',false);
+    	                    that.selectPickupId = '';
+    	                }else{
+        	                that.selectPickupId = that.itemCarriercode+'_'+that.carriercode+'_'+that.pickupid;
+							jQuery("#"+that.selectPickupId).prop('checked',true);
+							jQuery('#s_method_shipfunk_'+that.carriercode).prop('checked',true);
+        	            }
+        	            if(!jQuery.isEmptyObject(that.pickDialog)){
+        	            	that.pickDialog.close().remove();
+            	        }
+        	            that.hideLoading();
+        	            
+    	            }
+    	        });
+        },
+        getPickupsHtml:function(shipfunkpickups,code){
+            var that = this;
+        	var html = '';
+        	var calculated_price = shipfunkpickups['calculated_price'];
+			var customer_price = shipfunkpickups['customer_price'];
+        	jQuery.each(shipfunkpickups['pickups'],function(i,item){
+				var checked = '';
+				if(that.selectPickupId && that.selectPickupId == item["method"]){
+					checked = 'checked="checked"';
+				}
+				html += '<li>';
+				html += '<input name="shipping_method_pickup" parent-method="'+code+'" type="radio" '+checked+' calculated_price="'+calculated_price+'" customer_price="'+customer_price+'" value="'+item["method"]+'" id="'+item["method"]+'" class="radio">\
+					<label for="'+item["method"]+'">'+item["method_title"]+' </label>';
+				html += '</li>';
+			})
+			return html;
+        },
+    	initialize:function(){
+        	var that = this;
+        	var shipfunkpickups = that.shipfunkpickups;
+        	jQuery("input[name='shipping_method']").each(function(){
+        		var value = jQuery(this).val();
+    			var valueArray = value.split('_');
+    			if(valueArray[0] == 'shipfunk'){
+    				var code = valueArray[1];
+    				if(shipfunkpickups[code] && shipfunkpickups[code]['info']){
+						var parentLi = jQuery(this).parent();
+						var infoHtml = shipfunkpickups[code]['info'];
+						if(parentLi.find('a.shipfunk-tooltip').length > 0){
+							parentLi.find('a.shipfunk-tooltip').remove();
+						}
+						infoHtml = '<a data-container="body" data-placement="bottom" class="shipfunk-tooltip" title="'+infoHtml+'" data-html="true" data-toggle="tooltip" href="#"><i class="glyphicon glyphicon-info-sign" aria-hidden="true"></i></a>';
+						//infoHtml = '<button type="button" class="btn btn-default" data-toggle="tooltip" data-placement="left" title="Tooltip on left">Tooltip on left</button>';
+						parentLi.append(infoHtml);
+	        		}
+        		}
+            })
+            jQuery('[data-toggle="tooltip"]').tooltip();
+//             .on("hidden.bs.tooltip", function(){
+//                 jQuery(this).css("display", "");
+//           	});
+    		jQuery(document).on('click',"input[name='shipping_method']",function(){
+    			var value = jQuery(this).val();
+    			var valueArray = value.split('_');
+    			if(valueArray[0] == 'shipfunk'){
+    				//var html ='';
+    				var code = valueArray[1];
+    				if(typeof shipfunkpickups[code] != 'undefined'){
+        				var calculated_price = shipfunkpickups[code]['calculated_price'];
+        				var customer_price = shipfunkpickups[code]['customer_price'];
+        				if(typeof shipfunkpickups[code]['pickups'] != 'undefined' && shipfunkpickups[code]['pickups'].length > 0){
+        					var html = that.getPickupsHtml(shipfunkpickups[code],code);
+//         					jQuery.each(shipfunkpickups[code]['pickups'],function(i,item){
+//             					var checked = '';
+//             					if(that.selectPickupId && that.selectPickupId == item["method"]){
+// 									checked = 'checked="checked"';
+//                 				}
+//         						html += '<li>';
+//         						html += '<input name="shipping_method_pickup" parent-method="'+code+'" type="radio" '+checked+' calculated_price="'+calculated_price+'" customer_price="'+customer_price+'" value="'+item["method"]+'" id="'+item["method"]+'" class="radio">\
+//         							<label for="'+item["method"]+'">'+item["method_title"]+' </label>';
+//         						html += '</li>';
+//         					})
+        					var htmlConent = that.pickupsHtml.replace('{html}',html);
+        					that.pickDialog = dialog({
+        						title: 'Pickup Points',
+        						//quickClose: true,
+        						//fixed: true,
+        						//align: 'left',
+        						onclose: function () {
+        							this.close().remove();
+        						},
+        						content: htmlConent
+        					});
+//         					if(that.selectPickupValue && that.selectPickup){
+// 								jQuery('#'+that.selectPickupValue).trigger('click');
+// 								return false;
+//             				}
+        					//that.pickDialog.show();
+        					that.pickDialog.showModal();
+        					//that.pickDialog.show(document.getElementById(jQuery(this).attr('id')));
+        					if(that.selectPickupId){
+        						jQuery("input[name='shipping_method']:checked").attr('checked',false);
+        						jQuery("input[name='shipping_method']:checked").not(this).attr('checked',false);
+            				}else{
+            					jQuery("input[name='shipping_method']:checked").attr('checked',false);
+                			}
+            			}else{
+            				jQuery('label>span[class="real_shipping_method"]').remove();
+            				that.selectPickupId = '';
+            				that.carriercode = code;
+        					that.pickupid = '';
+        					that.calculated_price = calculated_price;
+        					that.customer_price = customer_price;
+        					that.selectedDelivery();
+                		}
+    				}
+    				return false;
+    			}else{
+    				jQuery(this).attr('checked',true);
+    				jQuery('label>span[class="real_shipping_method"]').remove();
+    			}
+    		})
+    		jQuery(document).on('click',"input[name='shipping_method_pickup']",function(){
+            	var value = jQuery(this).val();
+            	var valueArray = value.split('_');
+            	var _text = jQuery(this).parent().find('label[for='+value+']').text();
+            	var parentMethod = '<span class="real_shipping_method"> - '+_text+'<input type="hidden" name="pick_up" value="'+_text+'"><input type="hidden" name="pickup_code" value="'+value+'"></span>';
+            	var class_name='s_method_shipfunk_'+valueArray[1];
+            	jQuery('label>span[class="real_shipping_method"]').remove();
+            	jQuery('label[for='+class_name+']>span[class="price"]').before(parentMethod);
+            	that.itemCarriercode = valueArray[0];
+            	that.carriercode = valueArray[1];
+				that.pickupid = valueArray[2];
+            	that.calculated_price = jQuery(this).attr('calculated_price');
+            	that.customer_price = jQuery(this).attr('customer_price');
+            	that.selectedDelivery();
+            	return false;
+            })
+            jQuery(document).on('click',"#search-submit",function(){
+                var thisButton = jQuery(this);
+            	var postcode = jQuery("#search-pickups").val();
+            	if(!postcode){
+            		jQuery("#search-pickups").focus();
+            		return false;
+                }
+            	thisButton.attr("disabled", true);
+            	that.showLoading();
+            	var code = jQuery("input[name='shipping_method_pickup']:first").attr('parent-method');
+            	//var codesArray = codes.split('_');
+            	//var code = codesArray[1];
+                var url ="<?php echo $this->getUrl('shipfunk/postcode/index');?>";
+                jQuery.ajax({
+                    dataType: "html",
+                    type: "POST",
+                    evalScripts: true,
+                    url: url,
+                    data: {postcode: postcode,code:code},
+                    success: function (data, textStatus){
+                        var shipfunkpickups = jQuery.parseJSON(data);
+                        if(typeof shipfunkpickups['pickups'] != 'undefined' && shipfunkpickups['pickups'].length > 0){
+                        	var html = that.getPickupsHtml(shipfunkpickups,code);
+                            var htmlConent = that.pickupsHtml.replace('{html}',html);
+                            jQuery('.ui-dialog-content').html(htmlConent);
+                            jQuery('.ui-dialog-content #search-pickups').val(postcode);
+                        }else{
+							alert('Not Found!');
+                        }
+                        thisButton.attr("disabled", false);
+                        that.hideLoading();
+                    	return true;
+                    }
+                });
+                return false;
+            })
+            jQuery(document).on('click',"#reset-submit",function(){
+            	var thisButton = jQuery(this);
+            	var postcode = thisButton.attr('postcode');;//that.currentPostcode;
+            	thisButton.attr("disabled", true);
+            	that.showLoading();
+            	var code = jQuery("input[name='shipping_method_pickup']:first").attr('parent-method');
+                var url ="<?php echo $this->getUrl('shipfunk/postcode/index');?>";
+                jQuery.ajax({
+                    dataType: "html",
+                    type: "POST",
+                    evalScripts: true,
+                    url: url,
+                    data: {postcode: postcode,code:code},
+                    success: function (data, textStatus){
+                        var shipfunkpickups = jQuery.parseJSON(data);
+                        if(typeof shipfunkpickups['pickups'] != 'undefined' && shipfunkpickups['pickups'].length > 0){
+                        	var html = that.getPickupsHtml(shipfunkpickups,code);
+                            var htmlConent = that.pickupsHtml.replace('{html}',html);
+                            jQuery('.ui-dialog-content').html(htmlConent);
+                        }else{
+							alert('Not Found!');
+                        }
+                        thisButton.attr("disabled", false);
+                        that.hideLoading();
+                    	return true;
+                    }
+                });
+                return false;
+            })
+
+        	if(that.selectShippingMethod){
+               //jQuery('#s_method_'+that.selectShippingMethod).trigger('click');
+                
+        		if(that.selectPickupValue && that.selectPickup){
+        			that.selectPickupId = that.selectPickupValue;
+                	var parentRealMethod = '<span class="real_shipping_method"> - '+that.selectPickup+'<input type="hidden" name="pick_up" value="'+that.selectPickup+'"><input type="hidden" name="pickup_code" value="'+that.selectPickupValue+'"></span>';
+                	jQuery('label>span[class="real_shipping_method"]').remove();
+                	jQuery('label[for=s_method_'+that.selectShippingMethod+']>span[class="price"]').before(parentRealMethod);
+                }
+        		jQuery("input[name='shipping_method']:checked").prop('checked',false);
+        		jQuery('#s_method_'+that.selectShippingMethod).prop('checked',true);
+                that.selectPickupValue = '';
+                //that.selectPickupId = '';
+            }
+    	}
+    };
+    shipfunkPickupLib.initialize();
+    console.log(shipfunkPickupLib.shipfunkpickups);
+})(jQuery);
+</script>         

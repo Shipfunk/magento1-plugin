@@ -1,0 +1,418 @@
+<?php 
+    $parcelJson = array();
+?>
+<div id="order_parcel_info_content">
+<div class="field-row grid" id="order_parcel_info">
+<h3><?php echo Mage::helper('sales')->__('Manage Parcels') ?></h3>
+<table cellspacing="0" class="data">
+    <col />
+    <col width="80" />
+    <col />
+    <col />
+    <col width="80" />
+    <thead>
+        <tr class="headings">
+            <th><?php echo Mage::helper('sales')->__('#') ?></th>
+            <th><?php echo Mage::helper('sales')->__('Code') ?></th>
+            <th><?php echo Mage::helper('sales')->__('Tracking Code (Send)') ?></th>
+            <th><?php echo Mage::helper('sales')->__('Tracking Code (Return)') ?></th>
+            <th class="last"><?php echo Mage::helper('sales')->__('Actions') ?></th>
+        </tr>
+    </thead>
+    <tfoot>
+        <tr>
+            <td colspan="5" class="last">
+            	<button title="Add" type="button" class="scalable save createTrackingNumber" url="<?php echo $this->getAddUrl() ?>">
+            		<span><?php echo Mage::helper('sales')->__('Create') ?></span>
+            	</button>
+            	<button title="createNewPackageCards" type="button" class="scalable save createNewPackageCards" onclick="setLocation('<?php echo $this->getCreatePackageCardsUrl() ?>')">
+            		<span><?php echo Mage::helper('sales')->__('Create the package cards') ?></span>
+            	</button>
+            </td>
+        </tr>
+    </tfoot>
+<?php if($_parcels = $this->getAllParcels()): ?>
+    <tbody>
+    <?php $i=0;foreach ($_parcels as $_parcel):$i++ ?>
+    	<?php $parcelJson[$_parcel->getId()] = $_parcel->getData();?>
+        <tr class="<?php echo ($i%2==0)?'even':'odd' ?>">
+            <td><?php echo $i; ?></td>
+            <td><?php echo $this->escapeHtml($_parcel->getCode()) ?></td>
+            <td>
+            	<?php if($sendUrl = $this->checkDownloadFile($_parcel,'send')):?>
+                <a href="<?php echo $this->getTrackingUrl($_parcel,'send')?>" target="_blank"><?php echo $this->escapeHtml($_parcel->getData('tracking_codes_send')) ?></a>
+            	&nbsp (<a href="<?php echo $sendUrl?>"><?php echo Mage::helper('sales')->__('Download') ?></a>)
+            	<?php else:?>
+            		<?php echo $this->escapeHtml($_parcel->getData('tracking_codes_send')) ?>
+            	<?php endif;?>
+            </td>
+            <td>
+                <?php if($returnUrl = $this->checkDownloadFile($_parcel,'return')):?>
+                <a href="<?php echo $this->getTrackingUrl($_parcel,'return')?>" target="_blank"><?php echo $this->escapeHtml($_parcel->getData('tracking_codes_return')) ?></a>
+            	&nbsp (<a href="<?php echo $returnUrl?>"><?php echo Mage::helper('sales')->__('Download') ?></a>)
+            	<?php else:?>
+            		<?php echo $this->escapeHtml($_parcel->getData('tracking_codes_return')) ?>
+            	<?php endif;?>
+            </td>
+            <td class="last">
+            	<a href="#" class="editTrackingNumber" parcel_id="<?php echo $_parcel->getId()?>" url='<?php echo $this->getEditUrl($_parcel) ?>'><?php echo Mage::helper('sales')->__('Edit') ?></a>
+            	|
+            	<a href="#" class="deleteTrackingNumber" url="<?php echo $this->getRemoveUrl($_parcel) ?>"><?php echo Mage::helper('sales')->__('Delete') ?></a>
+            </td>
+        </tr>
+    <?php endforeach; ?>
+    </tbody>
+<?php endif; ?>
+</table>
+</div>
+</div>
+<div id="parcel-dialog-content" class="entry-edit" style="display: none">
+	<form id="parcel_edit_form" method="post">
+		<div class="fieldset fieldset-wide" id="block_base_fieldset">
+			<div class="hor-scroll">
+				<table cellspacing="0" class="form-list">
+					<tbody>
+						<tr>
+							<td class="label">
+								<label for="code">Code</label>
+							</td>
+							<td class="value">
+								<input id="code" name="code" value="" title="Code" type="text" class="input-text">
+							</td>
+						</tr>
+						<tr>
+							<td class="label">
+								<label for="contents">Contents</label>
+							</td>
+							<td class="value">
+								<input id="contents" name="contents" value="" title="Contents" type="text" class="input-text">
+							</td>
+						</tr>
+						<tr>
+							<td class="label">
+								<label for="weight_unit">Weight Unit <span class="required">*</span></label>
+							</td>
+							<td class="value">
+								<select id="weight_unit" name="weight_unit" title="Weight Unit" class="required-entry select">
+										<?php foreach ($this->getWeightUnitOptions() as $key=>$value):?>
+											<option value="<?php echo $key?>"><?php echo $value?></option>
+										<?php endforeach;?>
+								</select>
+							</td>
+						</tr>
+						<tr>
+							<td class="label">
+								<label for="weight_amount">Weight Amount <span class="required">*</span></label>
+							</td>
+							<td class="value">
+								<input id="weight_amount" name="weight_amount" value="" title="Weight Amount" type="text" class="input-text required-entry">
+							</td>
+						</tr>
+						<tr>
+							<td class="label">
+								<label for="monetary_value">Monetary Value</label>
+							</td>
+							<td class="value">
+								<input id="monetary_value" name="monetary_value" value="" title="Monetary Value" type="text" class="input-text">
+							</td>
+						</tr>
+						<tr>
+							<td class="label">
+								<label for="dimensions_unit">Dimensions Unit <span class="required">*</span></label>
+							</td>
+							<td class="value">
+								<select id="dimensions_unit" name="dimensions_unit" title="Dimensions Unit" class="required-entry select">
+									<?php foreach ($this->getDimensionsUnitOptions() as $key=>$value):?>
+										<option value="<?php echo $key?>"><?php echo $value?></option>
+									<?php endforeach;?>
+								</select>
+							</td>
+						</tr>
+						<tr>
+							<td class="label">
+								<label for="width">Width <span class="required">*</span></label>
+							</td>
+							<td class="value">
+								<input id="width" name="dimensions_width" value="" title="Width" type="text" class="input-text required-entry">
+							</td>
+						</tr>
+						<tr>
+							<td class="label">
+								<label for="depth">Depth <span class="required">*</span></label>
+							</td>
+							<td class="value">
+								<input id="depth" name="dimensions_depth" value="" title="Depth" type="text" class="input-text required-entry">
+							</td>
+						</tr>
+						<tr>
+							<td class="label">
+								<label for="height">Height <span class="required">*</span></label>
+							</td>
+							<td class="value">
+								<input id="height" name="dimensions_height" value="" title="Height" type="text" class="input-text required-entry">
+							</td>
+						</tr>
+						<tr>
+							<td class="label">
+								<label for="toppleable">Toppleable <span class="required">*</span></label>
+							</td>
+							<td class="value">
+								<select id="toppleable" name="toppleable" title="Toppleable" class="required-entry select">
+									<option value="1" selected="selected">Yes</option>
+									<option value="0">No</option>
+								</select>
+							</td>
+						</tr>
+						<tr>
+							<td class="label">
+								<label for="stackable">Stackable <span class="required">*</span></label>
+							</td>
+							<td class="value">
+								<select id="stackable" name="stackable" title="Stackable" class="required-entry select">
+									<option value="1" selected="selected">Yes</option>
+									<option value="0">No</option>
+								</select>
+							</td>
+						</tr>
+						<tr>
+							<td class="label">
+								<label for="fragile">Fragile <span class="required">*</span></label>
+							</td>
+							<td class="value">
+								<select id="fragile" name="fragile" title="Fragile" class="required-entry select">
+									<option value="1">Yes</option>
+									<option value="0" selected="selected">No</option>
+								</select>
+							</td>
+						</tr>
+						<tr>
+							<td class="label">
+								<label for="block_title">Warehouse <span class="required">*</span></label>
+							</td>
+							<td class="value">
+								<input id="warehouse" name="warehouse" value="" title="Warehouse" type="text" class="input-text required-entry">
+							</td>
+						</tr>
+						<tr>
+							<td class="label">
+								<label for="tracking_codes_send">Tracking Code (send)</label>
+							</td>
+							<td class="value">
+								<input id="tracking_codes_send" name="tracking_codes_send" value="" title="Tracking Code (send)" type="text" class="input-text">
+							</td>
+						</tr>
+						<tr>
+							<td class="label">
+								<label for="tracking_codes_return">Tracking Code (return)</label>
+							</td>
+							<td class="value">
+								<input id="tracking_codes_return" name="tracking_codes_return" value="" title="Tracking Code (return)" type="text" class="input-text">
+							</td>
+						</tr>
+						
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</form>
+	<script type="text/javascript">
+		//var customForm = new varienForm('parcel_edit_form');
+	</script>
+</div>
+<script type="text/javascript">
+(function(){
+var shipfunkParcel = {
+		artDialog:null,
+		customForm:null,
+		parcelJson:<?php echo $parcelJson?json_encode($parcelJson):'[]'?>,
+		parcelTotal:<?php echo count($parcelJson)+1?>,
+		selectCarrier:function(elem){
+			var option = elem.options[elem.selectedIndex];
+		    $('tracking_title').value = option.value && option.value != 'custom' ? option.text : '';
+		},
+		initForm:function(id){
+			id = id || '';
+			var formObj = jQuery('#parcel_edit_form');
+			var rowData = {
+					'code':'',
+					'contents':'',
+					'dimensions_depth':"<?php echo Mage::getStoreConfig('shipfunk/dimensions/default_depth')?>",
+					'dimensions_height':'<?php echo Mage::getStoreConfig('shipfunk/dimensions/default_height')?>',
+					'dimensions_unit':'<?php echo Mage::getStoreConfig('shipfunk/dimensions/dimension_unit')?>',
+					'dimensions_width':'<?php echo Mage::getStoreConfig('shipfunk/dimensions/default_width')?>',
+					'fragile':'0',
+					'id':'',
+					'monetary_value':'',
+					'order_id':'',
+					'parcel_id':'',
+					'stackable':'1',
+					'status':'',
+					'toppleable':'1',
+					'tracking_codes_return':'',
+					'tracking_codes_send':'',
+					'warehouse':'<?php echo Mage::getStoreConfig('shipfunk/warehouse/warehouse_name')?>',
+					'weight_amount':'<?php echo Mage::getStoreConfig('shipfunk/weight/default_weight')?>',
+					'weight_unit':'<?php echo Mage::getStoreConfig('shipfunk/weight/weight_unit')?>'
+					};
+			//console.log(this.parcelJson);
+			//console.log(id);
+			//console.log(this.parcelJson[id]);
+			if(id && this.parcelJson[id] != undefined){
+				rowData = this.parcelJson[id];
+				//formObj.find("[name='tracking_codes_send']").addClass('required-entry');
+				//formObj.find("label[for='tracking_codes_send'] span.required").text('*');
+				//formObj.find("[name='tracking_codes_return']").addClass('required-entry');
+				//formObj.find("label[for='tracking_codes_return'] span.required").text('*');
+				formObj.find("[name='stackable']").attr("disabled",true);
+				formObj.find("[name='stackable']").parents('tr').hide();
+				formObj.find("[name='toppleable']").attr("disabled",true);
+				formObj.find("[name='toppleable']").parents('tr').hide();
+
+				formObj.find("[name='tracking_codes_return']").attr("disabled",true);
+				formObj.find("[name='tracking_codes_return']").parents('tr').hide();
+				formObj.find("[name='tracking_codes_send']").attr("disabled",true);
+				formObj.find("[name='tracking_codes_send']").parents('tr').hide();
+			}else{
+				//formObj.find("input[name='tracking_codes_send']").removeClass('required-entry');
+				//formObj.find("label[for='tracking_codes_send'] span.required").text('');
+				//formObj.find("input[name='tracking_codes_return']").removeClass('required-entry');
+				//formObj.find("label[for='tracking_codes_return'] span.required").text('');
+				formObj.find("[name='stackable']").attr("disabled",false);
+				formObj.find("[name='stackable']").parents('tr').show();
+				formObj.find("[name='toppleable']").attr("disabled",false);
+				formObj.find("[name='toppleable']").parents('tr').show();
+
+				formObj.find("[name='tracking_codes_return']").attr("disabled",false);
+				formObj.find("[name='tracking_codes_return']").parents('tr').show();
+				formObj.find("[name='tracking_codes_send']").attr("disabled",false);
+				formObj.find("[name='tracking_codes_send']").parents('tr').show();
+				rowData['code'] = '000'+this.parcelTotal;
+			}
+			
+			jQuery.each(rowData, function (key, value) {
+				formObj.find("[name=" + key + "]").val(value);
+			});
+			this.customForm = new varienForm('parcel_edit_form');
+		},
+		initialize:function(){
+			jQuery(document).off('click',".createTrackingNumber");
+			jQuery(document).off('click',".editTrackingNumber");
+			jQuery(document).off('click',".deleteTrackingNumber");
+        	var that = this;
+        	jQuery(document).on('click',".createTrackingNumber",function(){
+				var url = jQuery(this).attr('url');
+			        //submitAndReloadArea($('order_parcel_info').parentNode, url)
+			    	that.initForm();
+			    	that.artDialog = dialog({
+						title: 'Create',
+						content: document.getElementById('parcel-dialog-content'),
+						okValue: 'Create',
+						onclose: function () {
+							this.close().remove();
+						},
+						ok: function () {
+							//console.log(that.customForm.validator.validate());
+							if(that.customForm.validator.validate()){
+								this.title('Creating..');
+								jQuery('#loading-mask').show();
+								that.shipfunkSubmitAndReloadArea($('parcel-dialog-content'), url);
+								that.parcelTotal ++;
+						    }
+							return false;
+						},
+						cancelValue: 'Cancel',
+						cancel: function () {
+							this.close().remove();
+//			 				return false;
+						}
+					});
+			    	that.artDialog.showModal();
+            });
+        	jQuery(document).on('click',".editTrackingNumber",function(){
+				var url = jQuery(this).attr('url');
+				var id = jQuery(this).attr('parcel_id');
+			        //submitAndReloadArea($('order_parcel_info').parentNode, url)
+			        //console.log(that.parcelJson);
+			        that.initForm(id);
+			        that.artDialog = dialog({
+						title: 'Edit',
+						content: document.getElementById('parcel-dialog-content'),
+						onclose: function () {
+							this.close().remove();
+						},
+						okValue: 'Save',
+						ok: function () {
+							//this.content('loading..');
+							//console.log(that.customForm);
+							if(that.customForm.validator.validate()){
+								this.title('Loading..');
+								jQuery('#loading-mask').show();
+								that.shipfunkSubmitAndReloadArea($('parcel-dialog-content'), url);
+						    }
+							return false;
+						},
+						cancelValue: 'Cancel',
+						cancel: function () {
+							this.close().remove();
+//			 				return false;
+						}
+					});
+			        that.artDialog.showModal();
+        	})
+        	jQuery(document).on('click',".deleteTrackingNumber",function(){
+				var url = jQuery(this).attr('url');
+				if (confirm('<?php echo Mage::helper('core')->jsQuoteEscape(Mage::helper('sales')->__('Are you sure to delete this parcel?')) ?>')) {
+			        that.shipfunkSubmitAndReloadArea($('parcel-dialog-content'), url);
+			    }
+        	})
+        },
+		shipfunkSubmitAndReloadArea:function(area, url) {
+			var that = this;
+			if($(area)) {
+				//console.log(area);
+				var updateArea = $('order_parcel_info');
+		        var fields = $(area).select('input', 'select', 'textarea');
+		        //console.log(fields);
+		        
+		        var data = Form.serializeElements(fields, true);
+		        //console.log(data);
+		        //return false;
+		        url = url + (url.match(new RegExp('\\?')) ? '&isAjax=true' : '?isAjax=true');
+		        new Ajax.Request(url, {
+		            parameters: $H(data),
+		            loaderArea: area,
+		            onSuccess: function(transport) {
+		                try {
+		                    if (transport.responseText.isJSON()) {
+		                        var response = transport.responseText.evalJSON();
+		                        if (response.error) {
+		                            alert(response.message);
+		                        }
+		                        if(response.ajaxExpired && response.ajaxRedirect) {
+		                            setLocation(response.ajaxRedirect);
+		                        }
+		                    } else {
+		                    	updateArea.update(transport.responseText);
+		                    	jQuery('#order_parcel_info_content #parcel-dialog-content').remove();
+		                    }
+		                }
+		                catch (e) {
+		                	updateArea.update(transport.responseText);
+		                }
+		                that.artDialog.close().remove();;
+		                jQuery('#loading-mask').hide();
+		            }
+		        });
+		    }
+		}
+};
+//console.log(shipfunkParcel.parcelJson);
+shipfunkParcel.initialize();
+jQuery('h4.head-shipping-method').parent().next('fieldset').after(jQuery('#order_parcel_info_content'));
+jQuery(document).ready(function(){
+	jQuery('#loading-mask').css('z-index','5000');
+	jQuery('#loading_mask_loader').css('z-index','10000');
+})
+})(jQuery);
+
+</script>
