@@ -37,8 +37,8 @@ $shipfunkpickups = json_decode($shipfunkpickups,true);
     	    		<div class="form-group">\
     	            	<input type="text" class="form-control" id="search-pickups" placeholder="<?php echo Mage::helper('shipfunk')->__('Search for other pickup points by postcode.')?>">\
     	          	</div>\
-    	          	<button id="search-submit" class="btn btn-default">Search</button>\
-    				<button id="reset-submit" postcode="<?php echo $address->getPostcode()?>" class="btn btn-default">Reset</button>\
+    	          	<button id="search-submit" class="btn btn-default"><?php echo Mage::helper('shipfunk')->__('Search') ?></button>\
+    				<button id="reset-submit" postcode="<?php echo $address->getPostcode()?>" class="btn btn-default"><?php echo Mage::helper('shipfunk')->__('Reset') ?></button>\
     	  		</div>\
     			<ul class="list-group">\
     				{html}\
@@ -99,8 +99,8 @@ $shipfunkpickups = json_decode($shipfunkpickups,true);
     	                if(!selectDeliverySuccess){
     	                    //if selectDeliverySuccess == false, alert the customer
     	                    //and remove the selected method to force selection again
-    	                    alert("Sorry, the request cannot be handled with unknown reason, please try again.");
-    	                    jQuery("input[name='shipping_method']:checked").prop('checked',false);
+    	                    alert("<?php echo Mage::helper('shipfunk')->__('Sorry, the request cannot be handled with unknown reason, please try again.') ?>");
+                            jQuery("input[name='shipping_method']:checked").prop('checked',false);
     	                    jQuery("input[name='shipping_method_pickup']:checked").prop('checked',false);
     	                    that.selectPickupId = '';
     	                }else{
@@ -180,7 +180,7 @@ $shipfunkpickups = json_decode($shipfunkpickups,true);
 //         					})
         					var htmlConent = that.pickupsHtml.replace('{html}',html);
         					that.pickDialog = dialog({
-        						title: 'Pickup Points',
+        						title: "<?php echo Mage::helper('shipfunk')->__('Pickup Points') ?>",
         						//quickClose: true,
         						//fixed: true,
         						//align: 'left',
@@ -261,7 +261,7 @@ $shipfunkpickups = json_decode($shipfunkpickups,true);
                             jQuery('.ui-dialog-content').html(htmlConent);
                             jQuery('.ui-dialog-content #search-pickups').val(postcode);
                         }else{
-							alert('Not Found!');
+							alert("<?php echo Mage::helper('shipfunk')->__('Not Found!') ?>");
                         }
                         thisButton.attr("disabled", false);
                         that.hideLoading();
@@ -290,7 +290,7 @@ $shipfunkpickups = json_decode($shipfunkpickups,true);
                             var htmlConent = that.pickupsHtml.replace('{html}',html);
                             jQuery('.ui-dialog-content').html(htmlConent);
                         }else{
-							alert('Not Found!');
+							alert("<?php echo Mage::helper('shipfunk')->__('Not Found!') ?>");
                         }
                         thisButton.attr("disabled", false);
                         that.hideLoading();

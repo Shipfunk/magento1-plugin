@@ -95,6 +95,15 @@
                 </shipfunk>
             </updates>
         </layout>
+        <translate>
+            <modules>
+                <Shipfunk_Shipfunk>
+                    <files>
+                        <default>Shipfunk_Shipfunk.csv</default>
+                    </files>
+                </Shipfunk_Shipfunk>
+            </modules>
+        </translate>
     </adminhtml>
     <global>
         <models>

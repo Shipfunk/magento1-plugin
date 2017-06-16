@@ -2,7 +2,7 @@
 class Shipfunk_Shipfunk_Helper_Data extends Mage_Core_Helper_Abstract
 {
     const LIVE_BASE_URL = "https://shipfunkservices.com/";
-    const DEV_BASE_URL = "https://dev.shipfunkservices.com/";
+    const DEV_BASE_URL = "https://shipfunkservices.com/"; //https://dev.shipfunkservices.com/
     const API_PARAMS = "api/1.2/";
     const TRACKING_PARAMS = "tracking/tracked?";
     

@@ -3,7 +3,7 @@
 ?>
 <div id="order_parcel_info_content">
 <div class="field-row grid" id="order_parcel_info">
-<h3><?php echo Mage::helper('sales')->__('Manage Parcels') ?></h3>
+<h3><?php echo Mage::helper('shipfunk')->__('Manage Parcels') ?></h3>
 <table cellspacing="0" class="data">
     <col />
     <col width="80" />
@@ -12,21 +12,21 @@
     <col width="80" />
     <thead>
         <tr class="headings">
-            <th><?php echo Mage::helper('sales')->__('#') ?></th>
-            <th><?php echo Mage::helper('sales')->__('Code') ?></th>
-            <th><?php echo Mage::helper('sales')->__('Tracking Code (Send)') ?></th>
-            <th><?php echo Mage::helper('sales')->__('Tracking Code (Return)') ?></th>
-            <th class="last"><?php echo Mage::helper('sales')->__('Actions') ?></th>
+            <th><?php echo Mage::helper('shipfunk')->__('#') ?></th>
+            <th><?php echo Mage::helper('shipfunk')->__('Code') ?></th>
+            <th><?php echo Mage::helper('shipfunk')->__('Tracking Code (Send)') ?></th>
+            <th><?php echo Mage::helper('shipfunk')->__('Tracking Code (Return)') ?></th>
+            <th class="last"><?php echo Mage::helper('shipfunk')->__('Actions') ?></th>
         </tr>
     </thead>
     <tfoot>
         <tr>
             <td colspan="5" class="last">
             	<button title="Add" type="button" class="scalable save createTrackingNumber" url="<?php echo $this->getAddUrl() ?>">
-            		<span><?php echo Mage::helper('sales')->__('Create') ?></span>
+            		<span><?php echo Mage::helper('shipfunk')->__('Create') ?></span>
             	</button>
             	<button title="createNewPackageCards" type="button" class="scalable save createNewPackageCards" onclick="setLocation('<?php echo $this->getCreatePackageCardsUrl() ?>')">
-            		<span><?php echo Mage::helper('sales')->__('Create the package cards') ?></span>
+            		<span><?php echo Mage::helper('shipfunk')->__('Create the package cards') ?></span>
             	</button>
             </td>
         </tr>
@@ -41,7 +41,7 @@
             <td>
             	<?php if($sendUrl = $this->checkDownloadFile($_parcel,'send')):?>
                 <a href="<?php echo $this->getTrackingUrl($_parcel,'send')?>" target="_blank"><?php echo $this->escapeHtml($_parcel->getData('tracking_codes_send')) ?></a>
-            	&nbsp (<a href="<?php echo $sendUrl?>"><?php echo Mage::helper('sales')->__('Download') ?></a>)
+            	&nbsp (<a href="<?php echo $sendUrl?>"><?php echo Mage::helper('shipfunk')->__('Download') ?></a>)
             	<?php else:?>
             		<?php echo $this->escapeHtml($_parcel->getData('tracking_codes_send')) ?>
             	<?php endif;?>
@@ -49,15 +49,15 @@
             <td>
                 <?php if($returnUrl = $this->checkDownloadFile($_parcel,'return')):?>
                 <a href="<?php echo $this->getTrackingUrl($_parcel,'return')?>" target="_blank"><?php echo $this->escapeHtml($_parcel->getData('tracking_codes_return')) ?></a>
-            	&nbsp (<a href="<?php echo $returnUrl?>"><?php echo Mage::helper('sales')->__('Download') ?></a>)
+            	&nbsp (<a href="<?php echo $returnUrl?>"><?php echo Mage::helper('shipfunk')->__('Download') ?></a>)
             	<?php else:?>
             		<?php echo $this->escapeHtml($_parcel->getData('tracking_codes_return')) ?>
             	<?php endif;?>
             </td>
             <td class="last">
-            	<a href="#" class="editTrackingNumber" parcel_id="<?php echo $_parcel->getId()?>" url='<?php echo $this->getEditUrl($_parcel) ?>'><?php echo Mage::helper('sales')->__('Edit') ?></a>
+            	<a href="#" class="editTrackingNumber" parcel_id="<?php echo $_parcel->getId()?>" url='<?php echo $this->getEditUrl($_parcel) ?>'><?php echo Mage::helper('shipfunk')->__('Edit') ?></a>
             	|
-            	<a href="#" class="deleteTrackingNumber" url="<?php echo $this->getRemoveUrl($_parcel) ?>"><?php echo Mage::helper('sales')->__('Delete') ?></a>
+            	<a href="#" class="deleteTrackingNumber" url="<?php echo $this->getRemoveUrl($_parcel) ?>"><?php echo Mage::helper('shipfunk')->__('Delete') ?></a>
             </td>
         </tr>
     <?php endforeach; ?>
@@ -74,7 +74,7 @@
 					<tbody>
 						<tr>
 							<td class="label">
-								<label for="code">Code</label>
+								<label for="code"><?php echo Mage::helper('shipfunk')->__('Code') ?></label>
 							</td>
 							<td class="value">
 								<input id="code" name="code" value="" title="Code" type="text" class="input-text">
@@ -82,7 +82,7 @@
 						</tr>
 						<tr>
 							<td class="label">
-								<label for="contents">Contents</label>
+								<label for="contents"><?php echo Mage::helper('shipfunk')->__('Contents') ?></label>
 							</td>
 							<td class="value">
 								<input id="contents" name="contents" value="" title="Contents" type="text" class="input-text">
@@ -90,7 +90,7 @@
 						</tr>
 						<tr>
 							<td class="label">
-								<label for="weight_unit">Weight Unit <span class="required">*</span></label>
+								<label for="weight_unit"><?php echo Mage::helper('shipfunk')->__('Weight Unit') ?> <span class="required">*</span></label>
 							</td>
 							<td class="value">
 								<select id="weight_unit" name="weight_unit" title="Weight Unit" class="required-entry select">
@@ -102,7 +102,7 @@
 						</tr>
 						<tr>
 							<td class="label">
-								<label for="weight_amount">Weight Amount <span class="required">*</span></label>
+								<label for="weight_amount"><?php echo Mage::helper('shipfunk')->__('Weight Amount') ?> <span class="required">*</span></label>
 							</td>
 							<td class="value">
 								<input id="weight_amount" name="weight_amount" value="" title="Weight Amount" type="text" class="input-text required-entry">
@@ -110,7 +110,7 @@
 						</tr>
 						<tr>
 							<td class="label">
-								<label for="monetary_value">Monetary Value</label>
+								<label for="monetary_value"><?php echo Mage::helper('shipfunk')->__('Monetary Value') ?></label>
 							</td>
 							<td class="value">
 								<input id="monetary_value" name="monetary_value" value="" title="Monetary Value" type="text" class="input-text">
@@ -118,7 +118,7 @@
 						</tr>
 						<tr>
 							<td class="label">
-								<label for="dimensions_unit">Dimensions Unit <span class="required">*</span></label>
+								<label for="dimensions_unit"><?php echo Mage::helper('shipfunk')->__('Dimensions Unit') ?> <span class="required">*</span></label>
 							</td>
 							<td class="value">
 								<select id="dimensions_unit" name="dimensions_unit" title="Dimensions Unit" class="required-entry select">
@@ -130,7 +130,7 @@
 						</tr>
 						<tr>
 							<td class="label">
-								<label for="width">Width <span class="required">*</span></label>
+								<label for="width"><?php echo Mage::helper('shipfunk')->__('Width') ?> <span class="required">*</span></label>
 							</td>
 							<td class="value">
 								<input id="width" name="dimensions_width" value="" title="Width" type="text" class="input-text required-entry">
@@ -138,7 +138,7 @@
 						</tr>
 						<tr>
 							<td class="label">
-								<label for="depth">Depth <span class="required">*</span></label>
+								<label for="depth"><?php echo Mage::helper('shipfunk')->__('Depth') ?> <span class="required">*</span></label>
 							</td>
 							<td class="value">
 								<input id="depth" name="dimensions_depth" value="" title="Depth" type="text" class="input-text required-entry">
@@ -146,7 +146,7 @@
 						</tr>
 						<tr>
 							<td class="label">
-								<label for="height">Height <span class="required">*</span></label>
+								<label for="height"><?php echo Mage::helper('shipfunk')->__('Height') ?> <span class="required">*</span></label>
 							</td>
 							<td class="value">
 								<input id="height" name="dimensions_height" value="" title="Height" type="text" class="input-text required-entry">
@@ -154,40 +154,40 @@
 						</tr>
 						<tr>
 							<td class="label">
-								<label for="toppleable">Toppleable <span class="required">*</span></label>
+								<label for="toppleable"><?php echo Mage::helper('shipfunk')->__('Toppleable') ?> <span class="required">*</span></label>
 							</td>
 							<td class="value">
 								<select id="toppleable" name="toppleable" title="Toppleable" class="required-entry select">
-									<option value="1" selected="selected">Yes</option>
-									<option value="0">No</option>
+									<option value="1" selected="selected"><?php echo Mage::helper('shipfunk')->__('Yes') ?></option>
+									<option value="0"><?php echo Mage::helper('shipfunk')->__('No') ?></option>
 								</select>
 							</td>
 						</tr>
 						<tr>
 							<td class="label">
-								<label for="stackable">Stackable <span class="required">*</span></label>
+								<label for="stackable"><?php echo Mage::helper('shipfunk')->__('Stackable') ?> <span class="required">*</span></label>
 							</td>
 							<td class="value">
 								<select id="stackable" name="stackable" title="Stackable" class="required-entry select">
-									<option value="1" selected="selected">Yes</option>
-									<option value="0">No</option>
+									<option value="1" selected="selected"><?php echo Mage::helper('shipfunk')->__('Yes') ?></option>
+									<option value="0"><?php echo Mage::helper('shipfunk')->__('No') ?></option>
 								</select>
 							</td>
 						</tr>
 						<tr>
 							<td class="label">
-								<label for="fragile">Fragile <span class="required">*</span></label>
+								<label for="fragile"><?php echo Mage::helper('shipfunk')->__('Fragile') ?> <span class="required">*</span></label>
 							</td>
 							<td class="value">
 								<select id="fragile" name="fragile" title="Fragile" class="required-entry select">
-									<option value="1">Yes</option>
-									<option value="0" selected="selected">No</option>
+									<option value="1"><?php echo Mage::helper('shipfunk')->__('Yes') ?></option>
+									<option value="0" selected="selected"><?php echo Mage::helper('shipfunk')->__('No') ?></option>
 								</select>
 							</td>
 						</tr>
 						<tr>
 							<td class="label">
-								<label for="block_title">Warehouse <span class="required">*</span></label>
+								<label for="block_title"><?php echo Mage::helper('shipfunk')->__('Warehouse') ?> <span class="required">*</span></label>
 							</td>
 							<td class="value">
 								<input id="warehouse" name="warehouse" value="" title="Warehouse" type="text" class="input-text required-entry">
@@ -195,7 +195,7 @@
 						</tr>
 						<tr>
 							<td class="label">
-								<label for="tracking_codes_send">Tracking Code (send)</label>
+								<label for="tracking_codes_send"><?php echo Mage::helper('shipfunk')->__('Tracking Code (Send)') ?></label>
 							</td>
 							<td class="value">
 								<input id="tracking_codes_send" name="tracking_codes_send" value="" title="Tracking Code (send)" type="text" class="input-text">
@@ -203,7 +203,7 @@
 						</tr>
 						<tr>
 							<td class="label">
-								<label for="tracking_codes_return">Tracking Code (return)</label>
+								<label for="tracking_codes_return"><?php echo Mage::helper('shipfunk')->__('Tracking Code (Return)') ?></label>
 							</td>
 							<td class="value">
 								<input id="tracking_codes_return" name="tracking_codes_return" value="" title="Tracking Code (return)" type="text" class="input-text">
@@ -304,23 +304,23 @@ var shipfunkParcel = {
 			        //submitAndReloadArea($('order_parcel_info').parentNode, url)
 			    	that.initForm();
 			    	that.artDialog = dialog({
-						title: 'Create',
+						title: "<?php echo Mage::helper('shipfunk')->__('Create') ?>",
 						content: document.getElementById('parcel-dialog-content'),
-						okValue: 'Create',
+						okValue: "<?php echo Mage::helper('shipfunk')->__('Create') ?>",
 						onclose: function () {
 							this.close().remove();
 						},
 						ok: function () {
 							//console.log(that.customForm.validator.validate());
 							if(that.customForm.validator.validate()){
-								this.title('Creating..');
+								this.title("<?php echo Mage::helper('shipfunk')->__('Creating ... ') ?>");
 								jQuery('#loading-mask').show();
 								that.shipfunkSubmitAndReloadArea($('parcel-dialog-content'), url);
 								that.parcelTotal ++;
 						    }
 							return false;
 						},
-						cancelValue: 'Cancel',
+						cancelValue: "<?php echo Mage::helper('shipfunk')->__('Cancel') ?>",
 						cancel: function () {
 							this.close().remove();
 //			 				return false;
@@ -335,12 +335,12 @@ var shipfunkParcel = {
 			        //console.log(that.parcelJson);
 			        that.initForm(id);
 			        that.artDialog = dialog({
-						title: 'Edit',
+						title: "<?php echo Mage::helper('shipfunk')->__('Edit') ?>",
 						content: document.getElementById('parcel-dialog-content'),
 						onclose: function () {
 							this.close().remove();
 						},
-						okValue: 'Save',
+						okValue: "<?php echo Mage::helper('shipfunk')->__('Save') ?>",
 						ok: function () {
 							//this.content('loading..');
 							//console.log(that.customForm);
@@ -351,7 +351,7 @@ var shipfunkParcel = {
 						    }
 							return false;
 						},
-						cancelValue: 'Cancel',
+						cancelValue: "<?php echo Mage::helper('shipfunk')->__('Cancel') ?>",
 						cancel: function () {
 							this.close().remove();
 //			 				return false;
@@ -361,7 +361,7 @@ var shipfunkParcel = {
         	})
         	jQuery(document).on('click',".deleteTrackingNumber",function(){
 				var url = jQuery(this).attr('url');
-				if (confirm('<?php echo Mage::helper('core')->jsQuoteEscape(Mage::helper('sales')->__('Are you sure to delete this parcel?')) ?>')) {
+				if (confirm('<?php echo Mage::helper('core')->jsQuoteEscape(Mage::helper('shipfunk')->__('Are you sure to delete this parcel?')) ?>')) {
 			        that.shipfunkSubmitAndReloadArea($('parcel-dialog-content'), url);
 			    }
         	})
