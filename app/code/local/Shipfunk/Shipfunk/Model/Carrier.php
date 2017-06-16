@@ -226,7 +226,7 @@ class Shipfunk_Shipfunk_Model_Carrier extends Mage_Shipping_Model_Carrier_Abstra
                     $price=$methods['customer_price'];
                     $title=$methods['category'];
                     if($title==null){
-                        $title="Other";
+                        $title = Mage::helper('shipfunk')->__("Other");
                     }
                     $shipFunkRates[$carrier_title][]=array(
                         'carrier' => $this->_code,
