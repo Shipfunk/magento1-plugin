@@ -315,11 +315,16 @@ class Shipfunk_Shipfunk_Helper_Api extends Mage_Core_Helper_Abstract {
         $writeConnection = $resource->getConnection('core_write');
         //save data to shipfunk_order_parcels
         //1,delete all
+        $binds = array(
+            'orderId' => $orderId
+        );
         if($forceFlush){
-            $writeConnection->query("DELETE FROM shipfunk_order_parcels WHERE order_id = {$orderId}");
+            $sql="DELETE FROM `shipfunk_order_parcels` WHERE order_id = :orderId";
         }else{
-            $writeConnection->query("DELETE FROM shipfunk_order_parcels WHERE order_id = {$orderId} and status = 1");
+            $sql="DELETE FROM `shipfunk_order_parcels` WHERE order_id = :orderId and status = 1";
         }
+        $writeConnection->query($sql,$binds);
+        
         //2,insert
         $result = array();
         $saveDir = Mage::getBaseDir('var') . '/export/shipfunk/package_cards/';

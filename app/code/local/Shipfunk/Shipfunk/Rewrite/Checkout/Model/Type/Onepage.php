@@ -19,22 +19,30 @@ class Shipfunk_Shipfunk_Rewrite_Checkout_Model_Type_Onepage extends Mage_Checkou
         if (!$rate) {
             return array('error' => -1, 'message' => Mage::helper('checkout')->__('Invalid shipping method.'));
         }
-         $this->getQuote()->getShippingAddress()
+        $this->getQuote()->getShippingAddress()
         ->setShippingMethod($shippingMethod);
          $address_id=$rate->getAddressId();
-        $write = Mage::getSingleton('core/resource')->getConnection('core_write');
+         
+        $_data=array(
+            'pick_up'=>'',
+            'pickup_code'=>''
+        );
         if(isset($data['pick_up']) && !empty($data['pick_up'])){
-            $sql = "update `sales_flat_quote_address` set pick_up ='{$data['pick_up']}' where address_id = {$address_id}";
-            $write->query($sql);
+            $_data['pick_up'] = strip_tags($data['pick_up']);
         }
         if(isset($data['pickup_code']) && !empty($data['pickup_code'])){
-            $sql = "update `sales_flat_quote_address` set pickup_code ='{$data['pickup_code']}' where address_id = {$address_id}";
-            $write->query($sql);
+            $_data['pickup_code'] = strip_tags($data['pickup_code']);
         }
-        
+        $model = Mage::getModel('sales/quote_address')->load($address_id)->addData($_data);
+        try {
+            $model->setId($address_id)->save();
+             
+        } catch (Exception $e){
+            echo $e->getMessage();
+        }
         $this->getQuote()->getShippingAddress()
-        ->setPickupCode($data['pickup_code'])
-        ->setPickUp($data['pick_up']);
+        ->setPickupCode($_data['pickup_code'])
+        ->setPickUp($_data['pick_up']);
         $this->getCheckout()
         ->setStepData('shipping_method', 'complete', true)
         ->setStepData('payment', 'allow', true);
