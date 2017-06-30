@@ -86,7 +86,9 @@ class Shipfunk_Shipfunk_Helper_Api extends Mage_Core_Helper_Abstract {
             //send email
             if (isset($res->Error->Message) && $res->Error->Message) {
                 $message = "Order number: #{$finalOrderid} \r\n Failure reason: {$res->response->Message}";
-            } else {
+            }elseif (isset($res->Info->Message) && $res->Info->Message){
+                $message = "Order number: #{$finalOrderid} \r\n Failure reason: {$res->Info->Message}";
+            }else {
                 $message = "Order number: #{$finalOrderid} \r\n Failure reason: API call failed";
             }
             $subject = "Shipfunk Error Report: Delete Parcels Failed";
