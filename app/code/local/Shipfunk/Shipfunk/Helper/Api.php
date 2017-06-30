@@ -86,7 +86,9 @@ class Shipfunk_Shipfunk_Helper_Api extends Mage_Core_Helper_Abstract {
             //send email
             if (isset($res->Error->Message) && $res->Error->Message) {
                 $message = "Order number: #{$finalOrderid} \r\n Failure reason: {$res->response->Message}";
-            } else {
+            }elseif (isset($res->Info->Message) && $res->Info->Message){
+                $message = "Order number: #{$finalOrderid} \r\n Failure reason: {$res->Info->Message}";
+            }else {
                 $message = "Order number: #{$finalOrderid} \r\n Failure reason: API call failed";
             }
             $subject = "Shipfunk Error Report: Delete Parcels Failed";
@@ -324,7 +326,11 @@ class Shipfunk_Shipfunk_Helper_Api extends Mage_Core_Helper_Abstract {
             $sql="DELETE FROM `shipfunk_order_parcels` WHERE order_id = :orderId and status = 1";
         }
         $writeConnection->query($sql,$binds);
-        
+         /* if($forceFlush){
+            $writeConnection->query("DELETE FROM shipfunk_order_parcels WHERE order_id = {$orderId}");
+        }else{
+            $writeConnection->query("DELETE FROM shipfunk_order_parcels WHERE order_id = {$orderId} and status = 1");
+        } */
         //2,insert
         $result = array();
         $saveDir = Mage::getBaseDir('var') . '/export/shipfunk/package_cards/';

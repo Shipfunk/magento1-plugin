@@ -99,23 +99,36 @@ class Shipfunk_Shipfunk_Adminhtml_ParcelController extends Mage_Adminhtml_Contro
             $parceData  = $this->getRequest()->getPost();
             $order = $this->_initOrder();
             if ($order) {
-                $format = Mage::getStoreConfig('shipfunk/package_card/package_card_types');
-                $size = Mage::getStoreConfig('shipfunk/package_card/package_card_sizes');
-                $firstParcel = Mage::helper('shipfunk/api')->getFirstParcel($order->getIncrementId());
-                if($firstParcel){
-                    $format = $firstParcel['card_format'];
-                    $size = $firstParcel['card_size'];
+                //check code
+                $incrementId = $order->getIncrementId();
+                $orderParcelCollection = Mage::getModel('shipfunk/orderParcels')->getCollection();
+                $orderParcelCollection->addFieldToFilter('code',array('eq'=>$parceData['code']));
+                $orderParcelCollection->addFieldToFilter('order_id',array('eq'=>$incrementId));
+                if($orderParcelCollection->getSize() > 0){
+                    $response = array(
+                        'error'     => true,
+                        'message'   => $this->__('This code already exists.'),
+                    );
+                }else{
+                    $format = Mage::getStoreConfig('shipfunk/package_card/package_card_types');
+                    $size = Mage::getStoreConfig('shipfunk/package_card/package_card_sizes');
+                    $firstParcel = Mage::helper('shipfunk/api')->getFirstParcel($incrementId);
+                    if($firstParcel){
+                        $format = $firstParcel['card_format'];
+                        $size = $firstParcel['card_size'];
+                    }
+                    $parceData['status'] = 0;
+                    $parceData['order_id'] = $incrementId;
+                    $parceData['card_format'] = $format;
+                    $parceData['card_size'] = $size;
+                    $track = Mage::getModel('shipfunk/orderParcels')
+                    ->setData($parceData)
+                    ->save();
+                    //print_r($parceData);die;
+                    $this->loadLayout();
+                    $response = $this->getLayout()->getBlock('shipfunk_sales_order_parcels')->toHtml();
                 }
-                $parceData['status'] = 0;
-                $parceData['order_id'] = $order->getIncrementId();
-                $parceData['card_format'] = $format;
-                $parceData['card_size'] = $size;
-                $track = Mage::getModel('shipfunk/orderParcels')
-                ->setData($parceData)
-                ->save();
-                //print_r($parceData);die;
-                $this->loadLayout();
-                $response = $this->getLayout()->getBlock('shipfunk_sales_order_parcels')->toHtml();
+                
             } else {
                 $response = array(
                     'error'     => true,
