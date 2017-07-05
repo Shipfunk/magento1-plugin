@@ -45,6 +45,13 @@ class Shipfunk_Shipfunk_Helper_Api extends Mage_Core_Helper_Abstract {
     }
 
     function deleteParcels($finalOrderid, $parcelId, $parcelCode, $parcelTrackingCode) {
+        $return_parcels = 1;
+        $orderParcelCollection = Mage::getModel('shipfunk/orderParcels')->getCollection();
+        $orderParcelCollection->addFieldToFilter('code',array('eq'=>$parcelCode));
+        $orderParcelCollection->addFieldToFilter('order_id',array('eq'=>$finalOrderid));
+        if($orderParcelCollection->getSize() == 1){
+            $return_parcels = 0;
+        }
         $shipfunkApi = Mage::helper('shipfunk')->getShipfunkApiInfo();
         $apiUrl = $shipfunkApi['url'];
         $apiKey = $shipfunkApi['key'];
@@ -54,7 +61,7 @@ class Shipfunk_Shipfunk_Helper_Api extends Mage_Core_Helper_Abstract {
                     "api_key" => $apiKey
                 ),
                 "order" => array(
-                    "return_parcels" => 1,
+                    "return_parcels" => $return_parcels,
                     "remove_all_parcels" => 0,
                     "parcels" => array(
                         array(
@@ -81,6 +88,8 @@ class Shipfunk_Shipfunk_Helper_Api extends Mage_Core_Helper_Abstract {
         $res = json_decode($server_output);
         if (isset($res->response) && isset($res->response->parcels) && is_array($res->response->parcels)) {
             $this->shipfunk_order_parcels($finalOrderid, (array) $res->response->parcels);
+            return true;
+        }elseif (isset($res->response->Code) && $res->response->Code == 1){
             return true;
         } else {
             //send email
