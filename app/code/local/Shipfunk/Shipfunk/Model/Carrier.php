@@ -185,7 +185,7 @@ class Shipfunk_Shipfunk_Model_Carrier extends Mage_Shipping_Model_Carrier_Abstra
                         //'flag'=>$methods['carriercode'],
                         'carrier_title' => $carrier_title,
                         'method' => $methods['carriercode'],
-                        'method_title' => $methods['productname'].' ('.$methods['delivtime'].' days)',
+                        'method_title' => $methods['productname'].' ('.$methods['delivtime'].' ' .Mage::helper('shipfunk')->__("days"). ')',
                         'price' => $price
                     );
                     $_shipFunkRates[$methods['carriercode']]['calculated_price'] = $methods['calculated_price'];
@@ -233,7 +233,7 @@ class Shipfunk_Shipfunk_Model_Carrier extends Mage_Shipping_Model_Carrier_Abstra
                         //'flag'=>$methods['carriercode'],
                         'carrier_title' => $title,
                         'method' => $methods['carriercode'],
-                        'method_title' => $carrier_title.' - '.$methods['productname'].' ('.$methods['delivtime'].' days)',
+                        'method_title' => $carrier_title.' - '.$methods['productname'].' ('.$methods['delivtime'].' ' .Mage::helper('shipfunk')->__("days"). ')',
                         'price' => $price
                     );
                     $_shipFunkRates[$methods['carriercode']]['calculated_price'] = $methods['calculated_price'];
