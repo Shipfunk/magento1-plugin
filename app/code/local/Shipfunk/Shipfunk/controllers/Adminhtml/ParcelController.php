@@ -166,6 +166,11 @@ class Shipfunk_Shipfunk_Adminhtml_ParcelController extends Mage_Adminhtml_Contro
     public function downloadAction() {
         $dir = Mage::getBaseDir('var') . '/export/shipfunk/package_cards/';
         $fileName = $this->getRequest()->getParam('file');
+        if(!preg_match("/^(send|return)\_[a-z0-9]+\.(pdf|zpl|html)$/i", $fileName)){
+            $this->_getSession()->addError($this->__('Invalid file name.'));
+            $this->_redirect('adminhtml/sales_order/index');
+            return false;
+        }
         //logic codes
         $filepath = $dir . $fileName;
         //start download
