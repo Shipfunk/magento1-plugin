@@ -1,4 +1,4 @@
- <?php
+<?php
 require_once "Mage/Adminhtml/controllers/System/ConfigController.php";
 
 class Shipfunk_Shipfunk_Adminhtml_System_ConfigController extends Mage_Adminhtml_System_ConfigController {
