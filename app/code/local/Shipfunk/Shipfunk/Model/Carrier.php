@@ -132,8 +132,8 @@ class Shipfunk_Shipfunk_Model_Carrier extends Mage_Shipping_Model_Carrier_Abstra
                 $data['query']['order']["products"][$num] = array(
                     "amount" => $item->getQty(),
                     "code" => $item->getSku(),
-                    "name" => htmlspecialchars($item->getName(), ENT_XML1),
-                    "category" => urlencode($categoryName),
+                    "name" => $item->getName(),
+                    "category" => $categoryName,
                     "weight" => array(
                         "unit" => $weightUnit,
                         "amount" => $weight
@@ -540,7 +540,7 @@ class Shipfunk_Shipfunk_Model_Carrier extends Mage_Shipping_Model_Carrier_Abstra
         curl_setopt($ch, CURLOPT_POST, 1);
         curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 10);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, "sf_get_delivery_options={$dataString}");
+        curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query(['sf_get_delivery_options' => $dataString]));
         $server_output = curl_exec ($ch);
         curl_close ($ch);
         return json_decode($server_output,true);
