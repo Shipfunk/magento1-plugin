@@ -132,7 +132,7 @@ class Shipfunk_Shipfunk_Model_Carrier extends Mage_Shipping_Model_Carrier_Abstra
                 $data['query']['order']["products"][$num] = array(
                     "amount" => $item->getQty(),
                     "code" => $item->getSku(),
-                    "name" => urlencode($item->getName()),
+                    "name" => htmlspecialchars($item->getName(), ENT_XML1),
                     "category" => urlencode($categoryName),
                     "weight" => array(
                         "unit" => $weightUnit,
