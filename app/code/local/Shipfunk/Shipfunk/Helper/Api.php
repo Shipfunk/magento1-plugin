@@ -218,7 +218,7 @@ class Shipfunk_Shipfunk_Helper_Api extends Mage_Core_Helper_Abstract {
                 "order" => array(
                     "return_cards" => 1,
                     "sendmail" => 0,
-                    "send_edi" => 0,
+                    "send_edi" => 1,
                     "package_card" => array(
                         "format" => $format,
                         "size" => $size
