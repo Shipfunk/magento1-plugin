@@ -332,7 +332,7 @@ class Shipfunk_Shipfunk_Model_Carrier extends Mage_Shipping_Model_Carrier_Abstra
                     "city" => (!empty($address->getDestCity()))?urlencode($address->getDestCity()):"Temp city",
                     "country" => (!empty($address->getDestCountryId()))?$address->getDestCountryId():"FI",
                     "phone" => (!empty($address->getTelephone()))?urlencode($address->getTelephone()):"1234567890",
-                    "email" => (!empty($customer->getEmail()) && !filter_var($customer->getEmail(), FILTER_VALIDATE_EMAIL) === false)?$customer->getEmail():"shipfunk@shipfunk.fi"
+                    "email" => (!empty($customer->getEmail()) && !filter_var($customer->getEmail(), FILTER_VALIDATE_EMAIL) === false)?$customer->getEmail():null
                 )
             )
         );
